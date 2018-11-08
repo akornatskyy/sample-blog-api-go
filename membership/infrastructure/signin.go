@@ -3,6 +3,7 @@ package infrastructure
 import (
 	"net/http"
 
+	"github.com/akornatskyy/sample-blog-api-go/membership/usecase/signin"
 	"github.com/akornatskyy/sample-blog-api-go/shared/httpjson"
 )
 
@@ -11,6 +12,13 @@ func SignInHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
-
-	httpjson.Encode(w, &struct{}{}, http.StatusOK)
+	var req signin.Request
+	if err := httpjson.Decode(r, &req); err != nil {
+		httpjson.Encode(w, err.Error(), http.StatusUnprocessableEntity)
+		return
+	}
+	resp := &signin.Response{
+		Username: req.Username,
+	}
+	httpjson.Encode(w, resp, http.StatusOK)
 }
