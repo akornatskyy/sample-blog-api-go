@@ -14,7 +14,7 @@ func SignInHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	var req signin.Request
 	if err := httpjson.Decode(r, &req); err != nil {
-		httpjson.Encode(w, err.Error(), http.StatusUnprocessableEntity)
+		httpjson.Encode(w, err, http.StatusUnprocessableEntity)
 		return
 	}
 	resp := &signin.Response{
