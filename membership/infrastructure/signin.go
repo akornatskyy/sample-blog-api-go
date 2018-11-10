@@ -13,7 +13,7 @@ func SignInHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var req signin.Request
-	if err := httpjson.Decode(r, &req); err != nil {
+	if err := httpjson.Decode(r, &req, 128); err != nil {
 		httpjson.Encode(w, err, http.StatusUnprocessableEntity)
 		return
 	}
