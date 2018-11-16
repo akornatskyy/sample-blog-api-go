@@ -12,6 +12,7 @@ const (
 )
 
 func main() {
+	m.Setup()
 	http.HandleFunc("/signin", m.SignInHandler)
 
 	log.Printf("listening on %s", addr)
