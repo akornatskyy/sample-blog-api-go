@@ -12,10 +12,10 @@ type userRepository struct {
 }
 
 type userInfo struct {
-	ID       int    `json:"id"`
-	Username string `json:"username"`
-	Password string `json:"password"`
-	IsLocked bool   `json:"is_locked"`
+	ID           int    `json:"id"`
+	Username     string `json:"username"`
+	PasswordHash string `json:"password_hash"`
+	IsLocked     bool   `json:"is_locked"`
 }
 
 var users = loadUsers("user-samples.json")
@@ -30,9 +30,9 @@ func (r userRepository) FindAuthInfo(username string) (*user.AuthInfo, error) {
 		return nil, errors.New("not found")
 	}
 	m := user.AuthInfo{
-		ID:       u.ID,
-		IsLocked: u.IsLocked,
-		Password: u.Password,
+		ID:           u.ID,
+		IsLocked:     u.IsLocked,
+		PasswordHash: []byte(u.PasswordHash),
 	}
 	return &m, nil
 }

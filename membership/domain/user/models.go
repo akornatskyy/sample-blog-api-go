@@ -1,13 +1,18 @@
 package user
 
+import (
+	"golang.org/x/crypto/bcrypt"
+)
+
 type (
 	AuthInfo struct {
-		ID       int
-		IsLocked bool
-		Password string
+		ID           int
+		IsLocked     bool
+		PasswordHash []byte
 	}
 )
 
 func (a *AuthInfo) IsSamePassword(password string) bool {
-	return a.Password == password
+	err := bcrypt.CompareHashAndPassword(a.PasswordHash, []byte(password))
+	return err == nil
 }

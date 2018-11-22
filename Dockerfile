@@ -7,6 +7,9 @@ WORKDIR $APPDIR
 
 RUN set -ex \
     \
+    && apk add --no-cache git \
+    \
+    && go get -v -d \
     && CGO_ENABLED=0 go build -ldflags '-s -w -extldflags "-static"' \
       -o /go/bin/sample-blog-api
 
