@@ -12,8 +12,5 @@ func ReadFile(filename string, v interface{}) error {
 	if err != nil {
 		return err
 	}
-	if err := json.Unmarshal(value, v); err != nil {
-		return err
-	}
-	return nil
+	return json.Unmarshal(value, v)
 }
