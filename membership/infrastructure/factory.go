@@ -11,8 +11,6 @@ type (
 	}
 )
 
-var singleton factory
-
 func Setup() {
 	domain.SetFactory(NewFactory())
 }
