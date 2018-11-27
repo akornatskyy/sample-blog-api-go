@@ -13,10 +13,10 @@ func Process(req *Request) (*Response, error) {
 	username := strings.ToLower(req.Username)
 	authInfo, err := domain.GetFactory().UserRepository().FindAuthInfo(username)
 	if err != nil || !authInfo.IsSamePassword(req.Password) {
-		return nil, invalidCredentials
+		return nil, errInvalidCredentials
 	}
 	if authInfo.IsLocked {
-		return nil, userLocked
+		return nil, errUserLocked
 	}
 	resp := Response{
 		Username: username,

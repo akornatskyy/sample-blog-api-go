@@ -4,11 +4,11 @@ import "fmt"
 
 // State interface to keep track of errors.
 type State interface {
+	error
+
 	Add(d *Detail) State
 
 	OrNil() error
-
-	Error() string
 }
 
 // Detail contains information about error specifics.

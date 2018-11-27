@@ -18,7 +18,11 @@ type userInfo struct {
 	IsLocked     bool   `json:"is_locked"`
 }
 
-var users = loadUsers("user-samples.json")
+var (
+	users = loadUsers("user-samples.json")
+
+	errNotFound = errors.New("not found")
+)
 
 func NewUserRepository() user.Repository {
 	return userRepository{}
@@ -27,7 +31,7 @@ func NewUserRepository() user.Repository {
 func (r userRepository) FindAuthInfo(username string) (*user.AuthInfo, error) {
 	u, ok := users[username]
 	if !ok {
-		return nil, errors.New("not found")
+		return nil, errNotFound
 	}
 	m := user.AuthInfo{
 		ID:           u.ID,

@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	invalidContentType = errorstate.New("HTTP").Add(&errorstate.Detail{
+	errUnexpectedContentType = errorstate.New("HTTP").Add(&errorstate.Detail{
 		Type:     "header",
 		Location: "Content-Type",
 		Reason:   "unexpected content type",
@@ -22,7 +22,7 @@ var (
 // value and stores it in the value pointed to by v.
 func Decode(r *http.Request, v interface{}, n int64) error {
 	if r.Header.Get("content-type") != "application/json" {
-		return invalidContentType
+		return errUnexpectedContentType
 	}
 	reader := &io.LimitedReader{R: r.Body, N: n}
 	if err := json.NewDecoder(reader).Decode(v); err != nil {

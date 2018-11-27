@@ -36,7 +36,7 @@ func (v *stringValidator) Required() StringValidatorBuilder {
 				Type:     "field",
 				Location: v.location,
 				Reason:   "required",
-				Message:  requiredField,
+				Message:  msgRequiredField,
 			})
 			return false
 		}
