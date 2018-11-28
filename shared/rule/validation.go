@@ -5,6 +5,6 @@ import (
 )
 
 var (
-	Username = validator.String("username").Required().Build()
-	Password = validator.String("password").Required().Build()
+	Username = validator.String("username").Required().Min(2).Build()
+	Password = validator.String("password").Required().Min(8).Build()
 )

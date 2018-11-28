@@ -1,11 +1,14 @@
 package validator
 
 import (
+	"fmt"
+
 	"github.com/akornatskyy/sample-blog-api-go/shared/errorstate"
 )
 
 type StringValidatorBuilder interface {
 	Required() StringValidatorBuilder
+	Min(min int) StringValidatorBuilder
 
 	Build() StringValidator
 }
@@ -37,6 +40,24 @@ func (v *stringValidator) Required() StringValidatorBuilder {
 				Location: v.location,
 				Reason:   "required",
 				Message:  msgRequiredField,
+			})
+			return false
+		}
+		return true
+	})
+	return v
+}
+
+func (v *stringValidator) Min(min int) StringValidatorBuilder {
+	msg := fmt.Sprintf(msgMinLength, min)
+	v.validators = append(v.validators, func(e errorstate.State, value string) bool {
+		l := len(value)
+		if l != 0 && l < min {
+			e.Add(&errorstate.Detail{
+				Type:     "field",
+				Location: v.location,
+				Reason:   "min length",
+				Message:  msg,
 			})
 			return false
 		}
