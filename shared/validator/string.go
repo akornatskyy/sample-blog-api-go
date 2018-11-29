@@ -9,6 +9,7 @@ import (
 type StringValidatorBuilder interface {
 	Required() StringValidatorBuilder
 	Min(min int) StringValidatorBuilder
+	Max(max int) StringValidatorBuilder
 
 	Build() StringValidator
 }
@@ -57,6 +58,23 @@ func (v *stringValidator) Min(min int) StringValidatorBuilder {
 				Type:     "field",
 				Location: v.location,
 				Reason:   "min length",
+				Message:  msg,
+			})
+			return false
+		}
+		return true
+	})
+	return v
+}
+
+func (v *stringValidator) Max(max int) StringValidatorBuilder {
+	msg := fmt.Sprintf(msgMaxLength, max)
+	v.validators = append(v.validators, func(e errorstate.State, value string) bool {
+		if len(value) > max {
+			e.Add(&errorstate.Detail{
+				Type:     "field",
+				Location: v.location,
+				Reason:   "max length",
 				Message:  msg,
 			})
 			return false
