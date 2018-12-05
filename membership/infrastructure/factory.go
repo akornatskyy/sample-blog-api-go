@@ -11,10 +11,6 @@ type (
 	}
 )
 
-func Setup() {
-	domain.SetFactory(NewFactory())
-}
-
 func NewFactory() domain.Factory {
 	return factory{}
 }
