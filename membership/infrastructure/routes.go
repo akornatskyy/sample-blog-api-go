@@ -7,5 +7,5 @@ import (
 )
 
 func Routes(t httptoken.Token) {
-	http.HandleFunc("/signin", SignInHandler)
+	http.HandleFunc("/signin", SignInHandler(t))
 }
