@@ -34,7 +34,7 @@ func (r userRepository) FindAuthInfo(username string) (*user.AuthInfo, error) {
 		return nil, errNotFound
 	}
 	m := user.AuthInfo{
-		ID:           u.ID,
+		UserID:       u.ID,
 		IsLocked:     u.IsLocked,
 		PasswordHash: []byte(u.PasswordHash),
 	}

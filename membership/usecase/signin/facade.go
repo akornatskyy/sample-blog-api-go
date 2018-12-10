@@ -19,7 +19,7 @@ func Process(req *Request) (*Response, error) {
 		return nil, errUserLocked
 	}
 	resp := Response{
-		Username: username,
+		UserID: authInfo.UserID,
 	}
 	return &resp, nil
 }

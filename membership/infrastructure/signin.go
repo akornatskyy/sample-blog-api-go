@@ -10,6 +10,9 @@ import (
 )
 
 func SignInHandler(t httptoken.Token) http.HandlerFunc {
+	type response struct {
+		Username string `json:"username"`
+	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			w.WriteHeader(http.StatusMethodNotAllowed)
@@ -25,11 +28,11 @@ func SignInHandler(t httptoken.Token) http.HandlerFunc {
 			httpjson.Encode(w, err, http.StatusBadRequest)
 			return
 		}
-		p := security.Principal{Username: resp.Username}
+		p := security.Principal{ID: resp.UserID}
 		if t.Write(w, &p) != nil {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
-		httpjson.Encode(w, resp, http.StatusOK)
+		httpjson.Encode(w, &response{Username: req.Username}, http.StatusOK)
 	}
 }

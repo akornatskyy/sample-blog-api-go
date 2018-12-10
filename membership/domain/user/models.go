@@ -6,7 +6,7 @@ import (
 
 type (
 	AuthInfo struct {
-		ID           int
+		UserID       int
 		IsLocked     bool
 		PasswordHash []byte
 	}
