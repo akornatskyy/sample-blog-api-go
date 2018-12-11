@@ -45,10 +45,7 @@ func (t *CookieToken) Authorize(w http.ResponseWriter, r *http.Request, p encodi
 	if p == nil {
 		return nil
 	}
-	if err := p.UnmarshalBinary(b); err != nil {
-		return err
-	}
-	return nil
+	return p.UnmarshalBinary(b)
 }
 
 func (t *CookieToken) Invalidate(w http.ResponseWriter) {
