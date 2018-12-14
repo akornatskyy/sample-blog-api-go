@@ -10,6 +10,12 @@ type (
 		IsLocked     bool
 		PasswordHash []byte
 	}
+
+	Registration struct {
+		Email        string
+		Username     string
+		PasswordHash []byte
+	}
 )
 
 func (a *AuthInfo) IsSamePassword(password string) bool {
