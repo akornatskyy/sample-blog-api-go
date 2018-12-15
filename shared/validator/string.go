@@ -2,6 +2,7 @@ package validator
 
 import (
 	"fmt"
+	"regexp"
 
 	"github.com/akornatskyy/sample-blog-api-go/shared/errorstate"
 )
@@ -10,6 +11,7 @@ type StringValidatorBuilder interface {
 	Required() StringValidatorBuilder
 	Min(min int) StringValidatorBuilder
 	Max(max int) StringValidatorBuilder
+	Pattern(pattern string, message string) StringValidatorBuilder
 
 	Build() StringValidator
 }
@@ -76,6 +78,23 @@ func (v *stringValidator) Max(max int) StringValidatorBuilder {
 				Location: v.location,
 				Reason:   "max length",
 				Message:  msg,
+			})
+			return false
+		}
+		return true
+	})
+	return v
+}
+
+func (v *stringValidator) Pattern(pattern string, message string) StringValidatorBuilder {
+	r := regexp.MustCompile(pattern)
+	v.validators = append(v.validators, func(e errorstate.State, value string) bool {
+		if value != "" && !r.MatchString(value) {
+			e.Add(&errorstate.Detail{
+				Type:     "field",
+				Location: v.location,
+				Reason:   "pattern",
+				Message:  message,
 			})
 			return false
 		}
