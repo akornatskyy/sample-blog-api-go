@@ -12,6 +12,7 @@ type StringValidatorBuilder interface {
 	Min(min int) StringValidatorBuilder
 	Max(max int) StringValidatorBuilder
 	Pattern(pattern string, message string) StringValidatorBuilder
+	Email() StringValidatorBuilder
 
 	Build() StringValidator
 }
@@ -101,6 +102,10 @@ func (v *stringValidator) Pattern(pattern string, message string) StringValidato
 		return true
 	})
 	return v
+}
+
+func (v *stringValidator) Email() StringValidatorBuilder {
+	return v.Pattern("^[a-z0-9._%+\\-]+@[a-z0-9.\\-]+\\.[a-z]{2,4}$", msgEmail)
 }
 
 func (v *stringValidator) Build() StringValidator {
