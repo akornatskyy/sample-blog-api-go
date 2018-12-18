@@ -22,3 +22,7 @@ func (a *AuthInfo) IsSamePassword(password string) bool {
 	err := bcrypt.CompareHashAndPassword(a.PasswordHash, []byte(password))
 	return err == nil
 }
+
+func PasswordHash(password string) ([]byte, error) {
+	return bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+}
