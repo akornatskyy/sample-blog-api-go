@@ -41,6 +41,22 @@ func (r userRepository) FindAuthInfo(username string) (*user.AuthInfo, error) {
 	return &m, nil
 }
 
+func (r userRepository) HasAccount(username string) (bool, error) {
+	_, ok := users[username]
+	return ok, nil
+}
+
+func (r userRepository) CreateAccount(reg *user.Registration) (bool, error) {
+	ID := len(users) + 1
+	users[reg.Username] = userInfo{
+		ID:           ID,
+		Username:     reg.Username,
+		PasswordHash: string(reg.PasswordHash),
+		IsLocked:     false,
+	}
+	return true, nil
+}
+
 func loadUsers(filename string) map[string]userInfo {
 	var r map[string][]userInfo
 	if err := iojson.ReadFile(filename, &r); err != nil {
