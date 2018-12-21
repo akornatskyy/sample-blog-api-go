@@ -9,4 +9,5 @@ import (
 func Routes(t httptoken.Token) {
 	http.HandleFunc("/signin", SignInHandler(t))
 	http.HandleFunc("/signup", SignUpHandler)
+	http.HandleFunc("/signout", SignOutHandler(t))
 }
