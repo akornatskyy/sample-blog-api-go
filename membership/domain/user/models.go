@@ -11,6 +11,12 @@ type (
 		PasswordHash []byte
 	}
 
+	User struct {
+		Username  string
+		FirstName string
+		LastName  string
+	}
+
 	Registration struct {
 		Email        string
 		Username     string
