@@ -16,6 +16,8 @@ type userInfo struct {
 	Username     string `json:"username"`
 	PasswordHash string `json:"password_hash"`
 	IsLocked     bool   `json:"is_locked"`
+	FirstName    string `json:"first_name"`
+	LastName     string `json:"last_name"`
 }
 
 var (
@@ -39,6 +41,21 @@ func (r userRepository) FindAuthInfo(username string) (*user.AuthInfo, error) {
 		PasswordHash: []byte(u.PasswordHash),
 	}
 	return &m, nil
+}
+
+func (r userRepository) FindUserByID(id int) (*user.User, error) {
+	for _, u := range users {
+		if u.ID == id {
+			m := user.User{
+				Username:  u.Username,
+				FirstName: u.FirstName,
+				LastName:  u.LastName,
+			}
+			return &m, nil
+		}
+	}
+
+	return nil, errNotFound
 }
 
 func (r userRepository) HasAccount(username string) (bool, error) {
