@@ -1,9 +1,11 @@
 package main
 
 import (
+	"crypto/rand"
 	"crypto/sha1"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/akornatskyy/sample-blog-api-go/membership"
@@ -16,7 +18,14 @@ const (
 )
 
 func main() {
-	key := []byte("secret")
+	key := []byte(os.Getenv("KEY"))
+	if len(key) == 0 {
+		log.Println("WARN: using random key")
+		key = make([]byte, 16)
+		if _, err := rand.Read(key); err != nil {
+			panic(err)
+		}
+	}
 	t := &httptoken.CookieToken{
 		Name: "_a",
 		Ticket: &ticket.Ticket{
