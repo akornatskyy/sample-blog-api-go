@@ -17,7 +17,7 @@ FROM scratch
 
 LABEL maintainer="Andriy Kornatskyy <andriy.kornatskyy@live.com>"
 
-ENV KEY
+ENV KEY=
 
 COPY --from=b /go/bin/sample-blog-api /app/
 ADD user-samples.json /app
