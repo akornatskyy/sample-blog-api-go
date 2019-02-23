@@ -3,10 +3,10 @@ package membership
 import (
 	"github.com/akornatskyy/sample-blog-api-go/membership/domain"
 	"github.com/akornatskyy/sample-blog-api-go/membership/infrastructure"
-	"github.com/akornatskyy/sample-blog-api-go/shared/httptoken"
+	"github.com/akornatskyy/sample-blog-api-go/shared/config"
 )
 
-func Setup(t httptoken.Token) {
+func Setup(c *config.Config) {
 	domain.SetFactory(infrastructure.NewFactory())
-	infrastructure.Routes(t)
+	infrastructure.Routes(c)
 }
