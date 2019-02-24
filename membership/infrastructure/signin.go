@@ -14,10 +14,6 @@ func SignInHandler(t httptoken.Token) http.HandlerFunc {
 		Username string `json:"username"`
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != http.MethodPost {
-			w.WriteHeader(http.StatusMethodNotAllowed)
-			return
-		}
 		var req signin.Request
 		if err := httpjson.Decode(r, &req, 128); err != nil {
 			httpjson.Encode(w, err, http.StatusUnprocessableEntity)

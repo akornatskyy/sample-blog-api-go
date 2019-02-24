@@ -1,14 +1,12 @@
 package infrastructure
 
 import (
-	"net/http"
-
 	"github.com/akornatskyy/sample-blog-api-go/shared/config"
 )
 
 func Routes(c *config.Config) {
-	http.HandleFunc("/signin", SignInHandler(c.Token))
-	http.HandleFunc("/signup", SignUpHandler)
-	http.HandleFunc("/signout", SignOutHandler(c.Token))
-	http.HandleFunc("/user", UserHandler(c.Token))
+	c.Router.HandlerFunc("POST", "/signin", SignInHandler(c.Token))
+	c.Router.HandlerFunc("POST", "/signup", SignUpHandler)
+	c.Router.HandlerFunc("GET", "/signout", SignOutHandler(c.Token))
+	c.Router.HandlerFunc("GET", "/user", UserHandler(c.Token))
 }

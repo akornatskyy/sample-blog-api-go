@@ -8,10 +8,6 @@ import (
 )
 
 func SignUpHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
 	var req signup.Request
 	if err := httpjson.Decode(r, &req, 140); err != nil {
 		httpjson.Encode(w, err, http.StatusUnprocessableEntity)

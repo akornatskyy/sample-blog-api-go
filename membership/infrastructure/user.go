@@ -28,10 +28,6 @@ func UserHandler(t httptoken.Token) http.HandlerFunc {
 		LastName  string `json:"lastName"`
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != http.MethodGet {
-			w.WriteHeader(http.StatusMethodNotAllowed)
-			return
-		}
 		p := security.Principal{}
 		if err := t.Authorize(w, r, &p); err != nil {
 			httpjson.Encode(w, ErrForbidden, http.StatusForbidden)

@@ -9,10 +9,12 @@ import (
 
 	"github.com/akornatskyy/sample-blog-api-go/shared/httptoken"
 	"github.com/akornatskyy/sample-blog-api-go/shared/security/ticket"
+	"github.com/julienschmidt/httprouter"
 )
 
 type Config struct {
-	Token httptoken.Token
+	Token  httptoken.Token
+	Router *httprouter.Router
 }
 
 func New() *Config {
@@ -32,5 +34,6 @@ func New() *Config {
 				Signer: ticket.NewSigner(sha1.New, key),
 			},
 		},
+		Router: httprouter.New(),
 	}
 }

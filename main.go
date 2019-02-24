@@ -18,5 +18,5 @@ func main() {
 	membership.Setup(c)
 
 	log.Printf("listening on %s", addr)
-	log.Fatal(http.ListenAndServe(addr, nil))
+	log.Fatal(http.ListenAndServe(addr, c.Router))
 }
