@@ -11,7 +11,7 @@ func Process(req *Request) (*Response, error) {
 		return nil, err
 	}
 	username := strings.ToLower(req.Username)
-	authInfo, err := domain.GetFactory().UserRepository().FindAuthInfo(username)
+	authInfo, err := domain.UserRepository().FindAuthInfo(username)
 	if err != nil || !authInfo.IsSamePassword(req.Password) {
 		return nil, errInvalidCredentials
 	}

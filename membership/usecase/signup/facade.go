@@ -12,7 +12,7 @@ func Process(req *Request) (*Response, error) {
 		return nil, err
 	}
 	username := strings.ToLower(strings.TrimSpace(req.Username))
-	r := domain.GetFactory().UserRepository()
+	r := domain.UserRepository()
 	if ok, err := r.HasAccount(username); err != nil || ok {
 		return nil, errUsernameTaken
 	}

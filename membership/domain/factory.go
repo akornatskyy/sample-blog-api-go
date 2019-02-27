@@ -10,10 +10,10 @@ type (
 
 var singleton Factory
 
-func GetFactory() Factory {
-	return singleton
-}
-
 func SetFactory(f Factory) {
 	singleton = f
+}
+
+func UserRepository() user.Repository {
+	return singleton.UserRepository()
 }

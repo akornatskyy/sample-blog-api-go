@@ -33,7 +33,7 @@ func UserHandler(t httptoken.Token) http.HandlerFunc {
 			httpjson.Encode(w, ErrForbidden, http.StatusForbidden)
 			return
 		}
-		u, err := domain.GetFactory().UserRepository().FindUserByID(p.ID)
+		u, err := domain.UserRepository().FindUserByID(p.ID)
 		if err != nil {
 			w.WriteHeader(http.StatusNotFound)
 			return
