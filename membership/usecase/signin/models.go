@@ -7,6 +7,6 @@ type (
 	}
 
 	Response struct {
-		UserID int
+		UserID string
 	}
 )

@@ -6,13 +6,14 @@ import (
 
 	"github.com/akornatskyy/sample-blog-api-go/membership/domain/user"
 	"github.com/akornatskyy/sample-blog-api-go/shared/iojson"
+	"github.com/google/uuid"
 )
 
 type userRepository struct {
 }
 
 type userInfo struct {
-	ID           int    `json:"id"`
+	ID           string `json:"id"`
 	Username     string `json:"username"`
 	PasswordHash string `json:"password_hash"`
 	IsLocked     bool   `json:"is_locked"`
@@ -43,7 +44,7 @@ func (r userRepository) FindAuthInfo(username string) (*user.AuthInfo, error) {
 	return &m, nil
 }
 
-func (r userRepository) FindUserByID(id int) (*user.User, error) {
+func (r userRepository) FindUserByID(id string) (*user.User, error) {
 	for _, u := range users {
 		if u.ID == id {
 			m := user.User{
@@ -64,9 +65,12 @@ func (r userRepository) HasAccount(username string) (bool, error) {
 }
 
 func (r userRepository) CreateAccount(reg *user.Registration) (bool, error) {
-	ID := len(users) + 1
+	id, err := uuid.NewRandom()
+	if err != nil {
+		return false, err
+	}
 	users[reg.Username] = userInfo{
-		ID:           ID,
+		ID:           id.String(),
 		Username:     reg.Username,
 		PasswordHash: string(reg.PasswordHash),
 		IsLocked:     false,

@@ -3,7 +3,7 @@ package user
 type Repository interface {
 	FindAuthInfo(username string) (*AuthInfo, error)
 
-	FindUserByID(id int) (*User, error)
+	FindUserByID(id string) (*User, error)
 
 	HasAccount(username string) (bool, error)
 
