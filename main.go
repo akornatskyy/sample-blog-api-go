@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/akornatskyy/sample-blog-api-go/membership"
+	"github.com/akornatskyy/sample-blog-api-go/public"
 	"github.com/akornatskyy/sample-blog-api-go/shared/config"
 )
 
@@ -16,6 +17,7 @@ func main() {
 	c := config.New()
 
 	membership.Setup(c)
+	public.Setup(c)
 
 	log.Printf("listening on %s", addr)
 	log.Fatal(http.ListenAndServe(addr, c.Router))
