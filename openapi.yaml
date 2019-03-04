@@ -1,0 +1,205 @@
+openapi: 3.0.0
+servers:
+  - url: 'http://localhost:8080'
+info:
+  version: 1.0.0
+  title: Sample Blog API
+  description: |
+    A sample API that uses blog as an example.
+  contact:
+    name: Andriy Kornatskyy
+    email: andriy.kornatskyy@live.com
+  license:
+    name: MIT
+    url: https://github.com/akornatskyy/sample-blog-api-go/blob/master/LICENSE
+tags:
+  - name: membership
+    description: Everything about membership.
+  - name: posts
+    description: Everything about blog posts.
+  - name: public
+    description: Everything about public features.
+x-tagGroups:
+  - name: General
+    tags:
+      - membership
+  - name: Posts
+    tags:
+      - posts
+  - name: Public
+    tags:
+      - public
+paths:
+  /signin:
+    post:
+      summary: Sign in user
+      operationId: signIn
+      tags:
+        - membership
+      requestBody:
+        description: user credentials
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignInRequest'
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignInResponse'
+        '400':
+          description: validation errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorState'
+        '422':
+          $ref: '#/components/responses/UnprocessedEntity'
+  /signup:
+    post:
+      summary: Sign up user
+      operationId: signUp
+      tags:
+        - membership
+      requestBody:
+        description: user registration information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpRequest'
+      responses:
+        '204':
+          description: registered
+        '400':
+          description: validation errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorState'
+        '422':
+          $ref: '#/components/responses/UnprocessedEntity'
+  /quote/daily:
+    get:
+      summary: Returns daily quote
+      operationId: dailyQuote
+      tags:
+        - public
+      responses:
+        '200':
+          description: registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Quote'
+        '404':
+          description: no daily quote
+components:
+  schemas:
+    ErrorState:
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: "#/components/schemas/ErrorDetail"
+      required:
+        - errors
+    ErrorDetail:
+      properties:
+        domain:
+          type: string
+          example: membership
+        type:
+          type: string
+          example: field
+        location:
+          type: string
+          example: username
+        reason:
+          type: string
+          example: required
+        message:
+          type: string
+          example: Required field cannot be left blank.
+      required:
+        - domain
+        - type
+        - location
+        - reason
+        - message
+    SignInRequest:
+      properties:
+        username:
+          type: string
+          minLength: 2
+          maxLength: 20
+          example: demo
+        password:
+          type: string
+          format: password
+          minLength: 8
+          maxLength: 12
+          example: password
+      required:
+        - username
+        - password
+    SignInResponse:
+      properties:
+        username:
+          type: string
+          example: demo
+      required:
+        - username
+    SignUpRequest:
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 6
+          maxLength: 50
+        username:
+          type: string
+          minLength: 2
+          maxLength: 20
+          example: demo
+        password:
+          type: string
+          format: password
+          minLength: 8
+          maxLength: 12
+        confirmPassword:
+          type: string
+          format: password
+      required:
+        - email
+        - username
+        - password
+        - confirmPassword
+    Quote:
+      properties:
+        author:
+          type: string
+          example: Leonardo da Vinci
+        message:
+          type: string
+          example: Simplicity is the ultimate sophistication.
+      required:
+        - author
+        - message
+  responses:
+    UnprocessedEntity:
+      description: unprocessable entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorState'
+          example:
+            errors:
+              - domain: "JSON"
+                type: "decode"
+                location: "HTTP request body"
+                reason: "EOF"
+                message: "Unable to parse JSON."
