@@ -6,10 +6,12 @@ import (
 )
 
 func (req *Request) Validate() error {
-	err := errorstate.New("signin")
+	e := &errorstate.ErrorState{
+		Domain: "signin",
+	}
 
-	rule.Username.Validate(err, req.Username)
-	rule.Password.Validate(err, req.Password)
+	rule.Username.Validate(e, req.Username)
+	rule.Password.Validate(e, req.Password)
 
-	return err.OrNil()
+	return e.OrNil()
 }

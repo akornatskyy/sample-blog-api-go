@@ -3,14 +3,16 @@ package signup
 import "github.com/akornatskyy/sample-blog-api-go/shared/errorstate"
 
 var (
-	errUsernameTaken = errorstate.New("signup").Add(&errorstate.Detail{
+	errUsernameTaken = errorstate.Single(&errorstate.Detail{
+		Domain:   "signup",
 		Type:     "field",
 		Location: "username",
 		Reason:   "username taken",
 		Message:  "The user with such username is already registered. Please try another.",
 	})
 
-	errCreateFailed = errorstate.New("signup").Add(&errorstate.Detail{
+	errCreateFailed = errorstate.Single(&errorstate.Detail{
+		Domain:   "signup",
 		Type:     "summary",
 		Location: "user",
 		Reason:   "create failed",

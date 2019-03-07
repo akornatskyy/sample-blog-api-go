@@ -6,14 +6,16 @@ import (
 )
 
 func (req *Request) Validate() error {
-	err := errorstate.New("signup")
+	e := &errorstate.ErrorState{
+		Domain: "signup",
+	}
 
-	rule.Email.Validate(err, req.Email)
-	rule.Username.Validate(err, req.Username)
+	rule.Email.Validate(e, req.Email)
+	rule.Username.Validate(e, req.Username)
 
-	if rule.Password.Validate(err, req.Password) &&
+	if rule.Password.Validate(e, req.Password) &&
 		req.Password != req.ConfirmPassword {
-		_ = err.Add(&errorstate.Detail{
+		_ = e.Add(&errorstate.Detail{
 			Type:     "field",
 			Location: "password",
 			Reason:   "no match",
@@ -21,5 +23,5 @@ func (req *Request) Validate() error {
 		})
 	}
 
-	return err.OrNil()
+	return e.OrNil()
 }

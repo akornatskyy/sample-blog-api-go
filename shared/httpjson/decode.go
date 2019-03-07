@@ -10,7 +10,8 @@ import (
 )
 
 var (
-	errUnexpectedContentType = errorstate.New("HTTP").Add(&errorstate.Detail{
+	errUnexpectedContentType = errorstate.Single(&errorstate.Detail{
+		Domain:   "HTTP",
 		Type:     "header",
 		Location: "Content-Type",
 		Reason:   "unexpected content type",
@@ -27,14 +28,16 @@ func Decode(r *http.Request, v interface{}, n int64) error {
 	reader := &io.LimitedReader{R: r.Body, N: n}
 	if err := json.NewDecoder(reader).Decode(v); err != nil {
 		if reader.N == 0 {
-			return errorstate.New("HTTP").Add(&errorstate.Detail{
+			return errorstate.Single(&errorstate.Detail{
+				Domain:   "HTTP",
 				Type:     "reader",
 				Location: "HTTP request body",
 				Reason:   "request entity too large",
 				Message:  fmt.Sprintf("Request body size is limited to %d bytes.", n),
 			})
 		}
-		return errorstate.New("JSON").Add(&errorstate.Detail{
+		return errorstate.Single(&errorstate.Detail{
+			Domain:   "JSON",
 			Type:     "decode",
 			Location: "HTTP request body",
 			Reason:   err.Error(),

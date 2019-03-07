@@ -21,14 +21,16 @@ type Config struct {
 }
 
 var (
-	errNotFound = errorstate.New("HTTP").Add(&errorstate.Detail{
+	errNotFound = errorstate.Single(&errorstate.Detail{
+		Domain:   "HTTP",
 		Type:     "router",
 		Location: "path",
 		Reason:   "resource not found",
 		Message:  "Oops! Code 404. Sorry, we can't find that resource.",
 	})
 
-	errMethodNotAllowed = errorstate.New("HTTP").Add(&errorstate.Detail{
+	errMethodNotAllowed = errorstate.Single(&errorstate.Detail{
+		Domain:   "HTTP",
 		Type:     "router",
 		Location: "HTTP header",
 		Reason:   "method not allowed",

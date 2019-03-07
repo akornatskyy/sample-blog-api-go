@@ -12,7 +12,8 @@ import (
 )
 
 var (
-	ErrForbidden = errorstate.New("HTTP").Add(&errorstate.Detail{
+	ErrForbidden = errorstate.Single(&errorstate.Detail{
+		Domain:   "HTTP",
 		Type:     "authorization",
 		Location: "token",
 		Reason:   "forbidden",

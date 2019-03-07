@@ -3,14 +3,16 @@ package signin
 import "github.com/akornatskyy/sample-blog-api-go/shared/errorstate"
 
 var (
-	errInvalidCredentials = errorstate.New("signin").Add(&errorstate.Detail{
+	errInvalidCredentials = errorstate.Single(&errorstate.Detail{
+		Domain:   "signin",
 		Type:     "summary",
 		Location: "user",
 		Reason:   "invalid credentials",
 		Message:  "The username or password provided is incorrect.",
 	})
 
-	errUserLocked = errorstate.New("signin").Add(&errorstate.Detail{
+	errUserLocked = errorstate.Single(&errorstate.Detail{
+		Domain:   "signin",
 		Type:     "summary",
 		Location: "user",
 		Reason:   "account locked",

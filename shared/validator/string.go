@@ -20,26 +20,26 @@ type StringValidatorBuilder interface {
 // StringValidator validates a string value and adds any errors into
 // error state.
 type StringValidator interface {
-	Validate(s errorstate.State, value string) bool
+	Validate(e *errorstate.ErrorState, value string) bool
 }
 
 // String creates string validator builder to setup validation rules.
 func String(location string) StringValidatorBuilder {
 	return &stringValidator{
-		location:   location,
-		validators: []func(errorstate.State, string) bool{},
+		location: location,
 	}
 }
 
 type stringValidator struct {
 	location   string
-	validators []func(errorstate.State, string) bool
+	validators []func(*errorstate.ErrorState, string) bool
 }
 
 func (v *stringValidator) Required() StringValidatorBuilder {
-	v.validators = append(v.validators, func(e errorstate.State, value string) bool {
+	v.validators = append(v.validators, func(e *errorstate.ErrorState, value string) bool {
 		if value == "" {
 			e.Add(&errorstate.Detail{
+				Domain:   e.Domain,
 				Type:     "field",
 				Location: v.location,
 				Reason:   "required",
@@ -54,10 +54,11 @@ func (v *stringValidator) Required() StringValidatorBuilder {
 
 func (v *stringValidator) Min(min int) StringValidatorBuilder {
 	msg := fmt.Sprintf(msgMinLength, min)
-	v.validators = append(v.validators, func(e errorstate.State, value string) bool {
+	v.validators = append(v.validators, func(e *errorstate.ErrorState, value string) bool {
 		l := len(value)
 		if l != 0 && l < min {
 			e.Add(&errorstate.Detail{
+				Domain:   e.Domain,
 				Type:     "field",
 				Location: v.location,
 				Reason:   "min length",
@@ -72,9 +73,10 @@ func (v *stringValidator) Min(min int) StringValidatorBuilder {
 
 func (v *stringValidator) Max(max int) StringValidatorBuilder {
 	msg := fmt.Sprintf(msgMaxLength, max)
-	v.validators = append(v.validators, func(e errorstate.State, value string) bool {
+	v.validators = append(v.validators, func(e *errorstate.ErrorState, value string) bool {
 		if len(value) > max {
 			e.Add(&errorstate.Detail{
+				Domain:   e.Domain,
 				Type:     "field",
 				Location: v.location,
 				Reason:   "max length",
@@ -89,9 +91,10 @@ func (v *stringValidator) Max(max int) StringValidatorBuilder {
 
 func (v *stringValidator) Pattern(pattern string, message string) StringValidatorBuilder {
 	r := regexp.MustCompile(pattern)
-	v.validators = append(v.validators, func(e errorstate.State, value string) bool {
+	v.validators = append(v.validators, func(e *errorstate.ErrorState, value string) bool {
 		if value != "" && !r.MatchString(value) {
 			e.Add(&errorstate.Detail{
+				Domain:   e.Domain,
 				Type:     "field",
 				Location: v.location,
 				Reason:   "pattern",
@@ -112,7 +115,7 @@ func (v *stringValidator) Build() StringValidator {
 	return v
 }
 
-func (v *stringValidator) Validate(s errorstate.State, value string) bool {
+func (v *stringValidator) Validate(s *errorstate.ErrorState, value string) bool {
 	for _, validator := range v.validators {
 		if !validator(s, value) {
 			return false
