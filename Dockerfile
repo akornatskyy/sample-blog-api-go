@@ -7,11 +7,12 @@ WORKDIR $APPDIR
 
 RUN set -ex \
     \
-    && apk add --no-cache git \
+    && apk add --no-cache git upx \
     \
     && go get -v -d \
     && CGO_ENABLED=0 go build -ldflags '-s -w -extldflags "-static"' \
-      -o /go/bin/sample-blog-api
+      -o /go/bin/sample-blog-api \
+    && upx -q --brute /go/bin/sample-blog-api
 
 FROM scratch
 
