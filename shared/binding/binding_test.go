@@ -252,3 +252,62 @@ func TestBindSlice(t *testing.T) {
 		}
 	}
 }
+
+// Benchmarks
+
+type sample struct {
+	Query    string        `binding:"q"`
+	Page     int           `binding:"page"`
+	Size     uint          `binding:"size"`
+	Duration time.Duration `binding:"duration"`
+	From     time.Time     `binding:"from" layout:"2006-01-02" loc:"UTC"`
+	Colors   []string      `binding:"colors"`
+	Numbers  []int         `binding:"numbers"`
+}
+
+var values = map[string][]string{
+	"q":        {"test"},
+	"page":     {"1"},
+	"size":     {"20"},
+	"duration": {"4h30m45s"},
+	"from":     {"2019-03-23"},
+	"colors":   {"yellow", "blue"},
+	"numbers":  {"1", "5", "10", "-20"},
+}
+
+func TestBind(t *testing.T) {
+	var s sample
+
+	err := binding.Bind(&s, values)
+
+	if err != nil {
+		t.Errorf("unexpected error")
+	}
+	duration, _ := time.ParseDuration("4h30m45s")
+	from, _ := time.Parse("2006-01-02", "2019-03-23")
+	expected := sample{
+		Query:    "test",
+		Page:     1,
+		Size:     20,
+		Duration: duration,
+		From:     from,
+		Colors:   []string{"yellow", "blue"},
+		Numbers:  []int{1, 5, 10, -20},
+	}
+	if !reflect.DeepEqual(&s, &expected) {
+		t.Errorf("no match, %+v ; expected %+v", &s, &expected)
+	}
+}
+
+func BenchmarkBind(b *testing.B) {
+	var s sample
+	var err error
+	for i := 0; i < b.N; i++ {
+		err = binding.Bind(&s, values)
+	}
+	b.StopTimer()
+
+	if err != nil {
+		b.Errorf("unexpected error")
+	}
+}
