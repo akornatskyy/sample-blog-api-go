@@ -82,6 +82,15 @@ paths:
                 $ref: '#/components/schemas/ErrorState'
         '422':
           $ref: '#/components/responses/UnprocessedEntity'
+  /signout:
+    get:
+      summary: Invalidates access token
+      operationId: signOut
+      tags:
+        - membership
+      responses:
+        '204':
+            description: ok
   /quote/daily:
     get:
       summary: Returns daily quote
