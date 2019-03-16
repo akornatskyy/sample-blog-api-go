@@ -91,6 +91,23 @@ paths:
       responses:
         '204':
             description: ok
+  /user:
+    get:
+      summary: Returns currently signed in user details
+      operationId: getCurrentUser
+      tags:
+        - membership
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: user not found
   /quote/daily:
     get:
       summary: Returns daily quote
@@ -187,6 +204,19 @@ components:
         - username
         - password
         - confirmPassword
+    UserResponse:
+      properties:
+        username:
+          type: string
+          example: demo
+        firstName:
+          type: string
+          example: Max
+        lastName:
+          type: string
+          example: Johnson
+      required:
+        - username
     Quote:
       properties:
         author:
@@ -212,3 +242,16 @@ components:
                 location: "HTTP request body"
                 reason: "EOF"
                 message: "Unable to parse JSON."
+    Forbidden:
+      description: unauthorized access
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorState'
+          example:
+            errors:
+              - domain: "HTTP"
+                type: "authorization"
+                location: "token"
+                reason: "forbidden"
+                message: "You do not have permission to access this resource using the credentials that you supplied."
