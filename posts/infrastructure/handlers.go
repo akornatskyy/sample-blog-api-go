@@ -16,6 +16,14 @@ func ListPostsHandler() http.HandlerFunc {
 			httpjson.Encode(w, err, http.StatusBadRequest)
 			return
 		}
+
+		resp, err := search.Process(req)
+		if err != nil {
+			httpjson.Encode(w, err, http.StatusBadRequest)
+			return
+		}
+
+		httpjson.Encode(w, resp, http.StatusOK)
 	}
 }
 
