@@ -259,6 +259,7 @@ type sample struct {
 	Query    string        `binding:"q"`
 	Page     int           `binding:"page"`
 	Size     uint          `binding:"size"`
+	Ok       bool          `binding:"ok"`
 	Duration time.Duration `binding:"duration"`
 	From     time.Time     `binding:"from" layout:"2006-01-02" loc:"UTC"`
 	Colors   []string      `binding:"colors"`
@@ -269,6 +270,7 @@ var values = map[string][]string{
 	"q":        {"test"},
 	"page":     {"1"},
 	"size":     {"20"},
+	"ok":       {"1"},
 	"duration": {"4h30m45s"},
 	"from":     {"2019-03-23"},
 	"colors":   {"yellow", "blue"},
@@ -289,6 +291,7 @@ func TestBind(t *testing.T) {
 		Query:    "test",
 		Page:     1,
 		Size:     20,
+		Ok:       true,
 		Duration: duration,
 		From:     from,
 		Colors:   []string{"yellow", "blue"},
