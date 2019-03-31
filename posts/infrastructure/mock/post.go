@@ -103,7 +103,7 @@ func filter(q string, limit, offset int) []*postInfo {
 var reWords = regexp.MustCompile(`\S+`)
 
 func truncateWords(s string, c int) string {
-	w := reWords.FindAllString(strings.ReplaceAll(s, "\\n", " "), c)
+	w := reWords.FindAllString(strings.Replace(s, "\\n", " ", -1), c)
 	if len(w) == c {
 		w = append(w, "...")
 	}
