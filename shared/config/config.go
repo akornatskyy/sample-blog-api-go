@@ -3,6 +3,7 @@ package config
 import (
 	"crypto/rand"
 	"crypto/sha1"
+	"flag"
 	"log"
 	"net/http"
 	"os"
@@ -11,14 +12,14 @@ import (
 	"github.com/akornatskyy/sample-blog-api-go/shared/errorstate"
 	"github.com/akornatskyy/sample-blog-api-go/shared/httpjson"
 	"github.com/akornatskyy/sample-blog-api-go/shared/httptoken"
+	"github.com/akornatskyy/sample-blog-api-go/shared/mock"
 	"github.com/akornatskyy/sample-blog-api-go/shared/security/ticket"
 	"github.com/julienschmidt/httprouter"
 )
 
-type Config struct {
-	Token  httptoken.Token
-	Router *httprouter.Router
-}
+const (
+	StrategyMock = "mock"
+)
 
 var (
 	errNotFound = errorstate.Single(&errorstate.Detail{
@@ -38,6 +39,12 @@ var (
 	})
 )
 
+type Config struct {
+	Router   *httprouter.Router
+	Strategy string
+	Token    httptoken.Token
+}
+
 func New() *Config {
 	key := []byte(os.Getenv("KEY"))
 	if len(key) == 0 {
@@ -47,6 +54,7 @@ func New() *Config {
 			panic(err)
 		}
 	}
+
 	r := httprouter.New()
 	r.NotFound = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		httpjson.Encode(w, errNotFound, http.StatusNotFound)
@@ -54,7 +62,17 @@ func New() *Config {
 	r.MethodNotAllowed = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		httpjson.Encode(w, errMethodNotAllowed, http.StatusMethodNotAllowed)
 	})
+
+	strategy := flag.String("strategy", StrategyMock, "a repository strategy")
+	flag.Parse()
+	log.Printf("using %s repository strategy", *strategy)
+	if *strategy == StrategyMock {
+		mock.Load("samples.json")
+	}
+
 	return &Config{
+		Router:   r,
+		Strategy: *strategy,
 		Token: &httptoken.CookieToken{
 			Name: "_a",
 			Ticket: &ticket.Ticket{
@@ -62,6 +80,5 @@ func New() *Config {
 				Signer: ticket.NewSigner(sha1.New, key),
 			},
 		},
-		Router: r,
 	}
 }

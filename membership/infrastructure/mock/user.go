@@ -2,70 +2,57 @@ package mock
 
 import (
 	"errors"
-	"log"
 
 	"github.com/akornatskyy/sample-blog-api-go/membership/domain/user"
-	"github.com/akornatskyy/sample-blog-api-go/shared/iojson"
+	"github.com/akornatskyy/sample-blog-api-go/shared/mock"
 	"github.com/google/uuid"
+)
+
+var (
+	errNotFound = errors.New("not found")
 )
 
 type userRepository struct {
 }
-
-type userInfo struct {
-	ID           string `json:"id"`
-	Username     string `json:"username"`
-	PasswordHash string `json:"password_hash"`
-	IsLocked     bool   `json:"is_locked"`
-	FirstName    string `json:"first_name"`
-	LastName     string `json:"last_name"`
-}
-
-var (
-	users = loadUsers("user-samples.json")
-
-	errNotFound = errors.New("not found")
-)
 
 func NewUserRepository() user.Repository {
 	return &userRepository{}
 }
 
 func (*userRepository) FindAuthInfo(username string) (*user.AuthInfo, error) {
-	u, ok := users[username]
-	if !ok {
-		return nil, errNotFound
-	}
-	m := user.AuthInfo{
-		UserID:       u.ID,
-		IsLocked:     u.IsLocked,
-		PasswordHash: []byte(u.PasswordHash),
-	}
-	return &m, nil
-}
-
-func FindUserByID(id string) (*user.User, error) {
-	for _, u := range users {
-		if u.ID == id {
-			m := user.User{
-				Username:  u.Username,
-				FirstName: u.FirstName,
-				LastName:  u.LastName,
+	for _, u := range mock.DB.Users {
+		if u.Username == username {
+			m := &user.AuthInfo{
+				UserID:       u.ID,
+				IsLocked:     u.IsLocked,
+				PasswordHash: []byte(u.PasswordHash),
 			}
-			return &m, nil
+			return m, nil
 		}
 	}
-
 	return nil, errNotFound
 }
 
 func (*userRepository) FindUserByID(id string) (*user.User, error) {
-	return FindUserByID(id)
+	u := mock.DB.UserByID[id]
+	if u == nil {
+		return nil, errNotFound
+	}
+	m := &user.User{
+		Username:  u.Username,
+		FirstName: u.FirstName,
+		LastName:  u.LastName,
+	}
+	return m, nil
 }
 
 func (*userRepository) HasAccount(username string) (bool, error) {
-	_, ok := users[username]
-	return ok, nil
+	for _, u := range mock.DB.Users {
+		if u.Username == username {
+			return true, nil
+		}
+	}
+	return false, nil
 }
 
 func (*userRepository) CreateAccount(reg *user.Registration) (bool, error) {
@@ -73,27 +60,13 @@ func (*userRepository) CreateAccount(reg *user.Registration) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	users[reg.Username] = &userInfo{
+	u := &mock.User{
 		ID:           id.String(),
 		Username:     reg.Username,
 		PasswordHash: string(reg.PasswordHash),
 		IsLocked:     false,
 	}
+	mock.DB.Users = append(mock.DB.Users, u)
+	mock.DB.UserByID[u.ID] = u
 	return true, nil
-}
-
-func loadUsers(filename string) map[string]*userInfo {
-	var r map[string][]*userInfo
-	if err := iojson.ReadFile(filename, &r); err != nil {
-		panic(err)
-	}
-
-	users := map[string]*userInfo{}
-	for _, u := range r["users"] {
-		users[u.Username] = u
-	}
-
-	log.Printf("loaded %d users", len(users))
-
-	return users
 }
