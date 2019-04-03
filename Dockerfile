@@ -21,7 +21,7 @@ LABEL maintainer="Andriy Kornatskyy <andriy.kornatskyy@live.com>"
 ENV KEY=
 
 COPY --from=b /go/bin/sample-blog-api /app/
-ADD *-samples.json /app/
+ADD samples.json /app/
 WORKDIR /app
 
 EXPOSE 8080
