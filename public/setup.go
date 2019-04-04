@@ -7,6 +7,6 @@ import (
 )
 
 func Setup(c *config.Config) {
-	domain.SetFactory(infrastructure.NewFactory())
+	domain.SetFactory(infrastructure.NewFactory(c))
 	infrastructure.Routes(c)
 }
