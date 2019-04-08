@@ -1,7 +1,7 @@
 package signin
 
 import (
-	"github.com/akornatskyy/sample-blog-api-go/shared/errorstate"
+	"github.com/akornatskyy/goext/errorstate"
 	"github.com/akornatskyy/sample-blog-api-go/shared/rule"
 )
 

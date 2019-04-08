@@ -2,7 +2,7 @@
 package rule
 
 import (
-	"github.com/akornatskyy/sample-blog-api-go/shared/validator"
+	"github.com/akornatskyy/goext/validator"
 )
 
 var (

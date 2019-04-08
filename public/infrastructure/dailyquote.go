@@ -3,8 +3,8 @@ package infrastructure
 import (
 	"net/http"
 
+	"github.com/akornatskyy/goext/httpjson"
 	"github.com/akornatskyy/sample-blog-api-go/public/domain"
-	"github.com/akornatskyy/sample-blog-api-go/shared/httpjson"
 )
 
 func DailyQuoteHandler(w http.ResponseWriter, r *http.Request) {

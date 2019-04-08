@@ -4,8 +4,8 @@ import (
 	"log"
 	"time"
 
+	"github.com/akornatskyy/goext/iojson"
 	"github.com/akornatskyy/sample-blog-api-go/public/domain/quote"
-	"github.com/akornatskyy/sample-blog-api-go/shared/iojson"
 )
 
 type User struct {

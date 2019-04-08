@@ -1,6 +1,8 @@
 package signup
 
-import "github.com/akornatskyy/sample-blog-api-go/shared/errorstate"
+import (
+	"github.com/akornatskyy/goext/errorstate"
+)
 
 var (
 	errUsernameTaken = errorstate.Single(&errorstate.Detail{

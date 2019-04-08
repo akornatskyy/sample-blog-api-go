@@ -1,6 +1,8 @@
 package signin
 
-import "github.com/akornatskyy/sample-blog-api-go/shared/errorstate"
+import (
+	"github.com/akornatskyy/goext/errorstate"
+)
 
 var (
 	errInvalidCredentials = errorstate.Single(&errorstate.Detail{

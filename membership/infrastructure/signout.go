@@ -3,7 +3,7 @@ package infrastructure
 import (
 	"net/http"
 
-	"github.com/akornatskyy/sample-blog-api-go/shared/httptoken"
+	"github.com/akornatskyy/goext/httptoken"
 )
 
 func SignOutHandler(t httptoken.Token) http.HandlerFunc {

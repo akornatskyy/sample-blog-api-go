@@ -3,9 +3,9 @@ package infrastructure
 import (
 	"net/http"
 
+	"github.com/akornatskyy/goext/httpjson"
+	"github.com/akornatskyy/goext/httptoken"
 	"github.com/akornatskyy/sample-blog-api-go/membership/usecase/signin"
-	"github.com/akornatskyy/sample-blog-api-go/shared/httpjson"
-	"github.com/akornatskyy/sample-blog-api-go/shared/httptoken"
 	"github.com/akornatskyy/sample-blog-api-go/shared/security"
 )
 

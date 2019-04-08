@@ -3,9 +3,9 @@ package infrastructure
 import (
 	"net/http"
 
+	"github.com/akornatskyy/goext/binding"
+	"github.com/akornatskyy/goext/httpjson"
 	"github.com/akornatskyy/sample-blog-api-go/posts/usecase/search"
-	"github.com/akornatskyy/sample-blog-api-go/shared/binding"
-	"github.com/akornatskyy/sample-blog-api-go/shared/httpjson"
 	"github.com/julienschmidt/httprouter"
 )
 

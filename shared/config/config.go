@@ -9,11 +9,11 @@ import (
 	"os"
 	"time"
 
-	"github.com/akornatskyy/sample-blog-api-go/shared/errorstate"
-	"github.com/akornatskyy/sample-blog-api-go/shared/httpjson"
-	"github.com/akornatskyy/sample-blog-api-go/shared/httptoken"
+	"github.com/akornatskyy/goext/errorstate"
+	"github.com/akornatskyy/goext/httpjson"
+	"github.com/akornatskyy/goext/httptoken"
+	"github.com/akornatskyy/goext/security/ticket"
 	"github.com/akornatskyy/sample-blog-api-go/shared/mock"
-	"github.com/akornatskyy/sample-blog-api-go/shared/security/ticket"
 	"github.com/julienschmidt/httprouter"
 )
 
