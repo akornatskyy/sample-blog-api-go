@@ -5,6 +5,8 @@ import (
 
 	"github.com/akornatskyy/goext/binding"
 	"github.com/akornatskyy/goext/httpjson"
+	"github.com/akornatskyy/goext/httptoken"
+	"github.com/akornatskyy/sample-blog-api-go/posts/usecase/getpost"
 	"github.com/akornatskyy/sample-blog-api-go/posts/usecase/search"
 	"github.com/julienschmidt/httprouter"
 )
@@ -27,12 +29,32 @@ func ListPostsHandler() http.HandlerFunc {
 	}
 }
 
-func GetPostHandler() httprouter.Handle {
+func GetPostHandler(t httptoken.Token) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+		req := &getpost.Request{
+			Slug:   p.ByName("slug"),
+			Fields: r.URL.Query().Get("fields"),
+		}
+		if req.Fields != "" {
+			t.Authorize(w, r, &req.Principal)
+		}
+
+		resp, err := getpost.Process(req)
+		if err != nil {
+			switch err {
+			case getpost.ErrNotFound:
+				httpjson.Encode(w, err, http.StatusNotFound)
+			default:
+				httpjson.Encode(w, err, http.StatusBadRequest)
+			}
+			return
+		}
+
+		httpjson.Encode(w, resp, http.StatusOK)
 	}
 }
 
-func ListPostCommentsHandler() httprouter.Handle {
+func AddPostCommentHandler() httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	}
 }

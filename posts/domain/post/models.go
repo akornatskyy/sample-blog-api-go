@@ -4,11 +4,12 @@ import "time"
 
 type (
 	Post struct {
+		ID      string    `json:"-"`
 		Slug    string    `json:"slug"`
 		Title   string    `json:"title"`
-		Message string    `json:"message"`
 		Created time.Time `json:"created_on"`
-		Author  Author    `json:"author"`
+		Author  *Author   `json:"author"`
+		Message string    `json:"message"`
 	}
 
 	Author struct {

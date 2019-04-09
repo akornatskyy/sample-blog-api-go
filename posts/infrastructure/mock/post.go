@@ -1,16 +1,18 @@
 package mock
 
 import (
+	"errors"
 	"regexp"
 	"strings"
 
-	"github.com/akornatskyy/sample-blog-api-go/shared/mock"
-
 	"github.com/akornatskyy/sample-blog-api-go/posts/domain/post"
+	"github.com/akornatskyy/sample-blog-api-go/shared/mock"
 )
 
 var (
 	reWords = regexp.MustCompile(`\S+`)
+
+	errNotFound = errors.New("not found")
 )
 
 type postRepository struct {
@@ -33,13 +35,37 @@ func (*postRepository) SearchPosts(q string, limit, offset int) ([]*post.Post, e
 			Title:   p.Title,
 			Message: truncateWords(p.Message, 40),
 			Created: p.Created,
-			Author: post.Author{
+			Author: &post.Author{
 				FirstName: u.FirstName,
 				LastName:  u.LastName,
 			},
 		})
 	}
 	return r, nil
+}
+
+func (*postRepository) GetPost(slug string) (*post.Post, error) {
+	for _, p := range mock.DB.Posts {
+		if p.Slug == slug {
+			u, ok := mock.DB.UserByID[p.AuthorID]
+			if !ok {
+				break
+			}
+			m := &post.Post{
+				ID:      p.ID,
+				Slug:    p.Slug,
+				Title:   p.Title,
+				Message: p.Message,
+				Created: p.Created,
+				Author: &post.Author{
+					FirstName: u.FirstName,
+					LastName:  u.LastName,
+				},
+			}
+			return m, nil
+		}
+	}
+	return nil, errNotFound
 }
 
 func filter(q string, limit, offset int) []*mock.Post {
