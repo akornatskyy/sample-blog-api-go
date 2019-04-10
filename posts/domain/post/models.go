@@ -16,4 +16,11 @@ type (
 		FirstName string `json:"first_name"`
 		LastName  string `json:"last_name"`
 	}
+
+	Comment struct {
+		Author    *Author   `json:"author"`
+		Created   time.Time `json:"created_on"`
+		Message   string    `json:"message"`
+		Moderated bool      `json:"moderated"`
+	}
 )

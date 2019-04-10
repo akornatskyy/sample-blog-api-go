@@ -68,6 +68,30 @@ func (*postRepository) GetPost(slug string) (*post.Post, error) {
 	return nil, errNotFound
 }
 
+func (*postRepository) ListComments(postID, authorID string) ([]*post.Comment, error) {
+	var comments []*post.Comment
+	for _, c := range mock.DB.Comments {
+		if c.PostID != postID || (!c.Moderated && c.AuthorID != authorID) {
+			continue
+		}
+		u, ok := mock.DB.UserByID[c.AuthorID]
+		if !ok {
+			continue
+		}
+		comments = append(comments, &post.Comment{
+			Author: &post.Author{
+				FirstName: u.FirstName,
+				LastName:  u.LastName,
+			},
+			Created:   c.Created,
+			Message:   c.Message,
+			Moderated: c.Moderated,
+		})
+	}
+
+	return comments, nil
+}
+
 func filter(q string, limit, offset int) []*mock.Post {
 	if q == "" {
 		n := len(mock.DB.Posts)

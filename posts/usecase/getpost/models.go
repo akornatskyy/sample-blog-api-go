@@ -14,5 +14,7 @@ type (
 
 	Response struct {
 		*post.Post
+
+		Comments []*post.Comment `json:"comments,omitempty"`
 	}
 )

@@ -11,6 +11,7 @@ func (req *Request) Validate() error {
 	}
 
 	rule.Slug.Validate(e, req.Slug)
+	rule.Fields.Validate(e, req.Fields)
 
 	return e.OrNil()
 }

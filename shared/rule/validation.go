@@ -13,5 +13,6 @@ var (
 	Query = validator.String("q").Max(20).Build()
 	Page  = validator.Number("page").Min(0).Max(9).Build()
 
-	Slug = validator.String("slug").Required().Min(2).Max(35).Build()
+	Slug   = validator.String("slug").Required().Min(2).Max(35).Build()
+	Fields = validator.String("fields").Max(20).Build()
 )

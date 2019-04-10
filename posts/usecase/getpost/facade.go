@@ -1,6 +1,8 @@
 package getpost
 
 import (
+	"strings"
+
 	"github.com/akornatskyy/sample-blog-api-go/posts/domain"
 )
 
@@ -17,6 +19,14 @@ func Process(req *Request) (*Response, error) {
 	}
 	resp := Response{
 		Post: p,
+	}
+
+	if strings.Contains(req.Fields, "comments") {
+		comments, err := domain.PostRepository().ListComments(
+			p.ID, req.Principal.ID)
+		if err == nil {
+			resp.Comments = comments
+		}
 	}
 
 	return &resp, nil
