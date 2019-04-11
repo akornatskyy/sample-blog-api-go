@@ -12,3 +12,7 @@ func (p *Principal) UnmarshalBinary(data []byte) error {
 	p.ID = string(data)
 	return nil
 }
+
+func (p *Principal) IsAuthenticated() bool {
+	return p.ID != ""
+}

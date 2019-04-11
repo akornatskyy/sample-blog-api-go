@@ -15,6 +15,11 @@ type (
 	Response struct {
 		*post.Post
 
-		Comments []*post.Comment `json:"comments,omitempty"`
+		Permissions *Permissions    `json:"permissions,omitempty"`
+		Comments    []*post.Comment `json:"comments,omitempty"`
+	}
+
+	Permissions struct {
+		CreateComment bool `json:"create_comment"`
 	}
 )

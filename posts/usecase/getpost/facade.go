@@ -21,6 +21,17 @@ func Process(req *Request) (*Response, error) {
 		Post: p,
 	}
 
+	if strings.Contains(req.Fields, "permissions") {
+		resp.Permissions = &Permissions{}
+		if req.Principal.IsAuthenticated() {
+			n, err := domain.PostRepository().CountCommentsAwaitingModeration(
+				req.Principal.ID, maxCommentsAwaitingModeration)
+			if err == nil {
+				resp.Permissions.CreateComment = n < maxCommentsAwaitingModeration
+			}
+		}
+	}
+
 	if strings.Contains(req.Fields, "comments") {
 		comments, err := domain.PostRepository().ListComments(
 			p.ID, req.Principal.ID)

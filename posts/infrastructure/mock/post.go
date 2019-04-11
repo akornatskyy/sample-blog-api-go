@@ -92,6 +92,19 @@ func (*postRepository) ListComments(postID, authorID string) ([]*post.Comment, e
 	return comments, nil
 }
 
+func (*postRepository) CountCommentsAwaitingModeration(authorID string, limit int) (int, error) {
+	n := 0
+	for _, c := range mock.DB.Comments {
+		if !c.Moderated && c.AuthorID == authorID {
+			n++
+			if n == limit {
+				break
+			}
+		}
+	}
+	return n, nil
+}
+
 func filter(q string, limit, offset int) []*mock.Post {
 	if q == "" {
 		n := len(mock.DB.Posts)
