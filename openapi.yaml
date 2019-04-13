@@ -1,4 +1,5 @@
 openapi: 3.0.0
+# https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md
 servers:
   - url: 'http://localhost:8080'
 info:
@@ -51,11 +52,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/SignInResponse'
         '400':
-          description: validation errors
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorState'
+          $ref: '#/components/responses/ValidationErrors'
         '422':
           $ref: '#/components/responses/UnprocessedEntity'
   /signup:
@@ -73,13 +70,9 @@ paths:
               $ref: '#/components/schemas/SignUpRequest'
       responses:
         '204':
-          description: registered
+          $ref: '#/components/responses/NoContent'
         '400':
-          description: validation errors
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorState'
+          $ref: '#/components/responses/ValidationErrors'
         '422':
           $ref: '#/components/responses/UnprocessedEntity'
   /signout:
@@ -90,7 +83,7 @@ paths:
         - membership
       responses:
         '204':
-            description: ok
+          $ref: '#/components/responses/NoContent'
   /user:
     get:
       summary: Returns currently signed in user details
@@ -107,7 +100,25 @@ paths:
         '403':
           $ref: '#/components/responses/Forbidden'
         '404':
-          description: user not found
+          $ref: '#/components/responses/NotFound'
+  /posts:
+    get:
+      summary: Search posts
+      operationId: searchPosts
+      tags:
+        - posts
+      parameters:
+        - $ref: "#/components/parameters/q"
+        - $ref: "#/components/parameters/page"
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchPostResponse'
+        '400':
+          $ref: '#/components/responses/ValidationErrors'
   /quote/daily:
     get:
       summary: Returns daily quote
@@ -122,8 +133,28 @@ paths:
               schema:
                 $ref: '#/components/schemas/Quote'
         '404':
-          description: no daily quote
+          $ref: '#/components/responses/NotFound'
 components:
+  parameters:
+    q:
+      name: q
+      in: query
+      description: text to search
+      required: false
+      schema:
+        type: string
+        maxLength: 20
+    page:
+      name: page
+      in: query
+      description: page number
+      required: false
+      schema:
+        type: number
+        format: int32
+        default: 0
+        minimum: 0
+        maximum: 9
   schemas:
     ErrorState:
       properties:
@@ -217,6 +248,52 @@ components:
           example: Johnson
       required:
         - username
+    Paging:
+      properties:
+        before:
+          type: number
+          example: 0
+        after:
+          type: number
+          example: 2
+    Author:
+      properties:
+        first_name:
+          type: string
+          example: Sophia
+        last_name:
+          type: string
+          example: Williams
+      required:
+        - first_name
+        - last_name
+    Post:
+      properties:
+        slug:
+          type: string
+          example: adipisci-quia-dolorem-rerum
+        title:
+          type: string
+          example: Adipisci Quia Dolorem Rerum
+        message:
+          type: string
+          example: Facere quos eum omnis dicta exercitationem nobis esse ducimus ...
+        created_on:
+          type: string
+          format: date-time
+        author:
+          $ref: "#/components/schemas/Author"
+    SearchPostResponse:
+      properties:
+        paging:
+          $ref: "#/components/schemas/Paging"
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Post"
+      required:
+        - paging
+        - items
     Quote:
       properties:
         author:
@@ -229,19 +306,14 @@ components:
         - author
         - message
   responses:
-    UnprocessedEntity:
-      description: unprocessable entity
+    NoContent:
+      description: no content
+    ValidationErrors:
+      description: validation errors
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorState'
-          example:
-            errors:
-              - domain: "JSON"
-                type: "decode"
-                location: "HTTP request body"
-                reason: "EOF"
-                message: "Unable to parse JSON."
     Forbidden:
       description: unauthorized access
       content:
@@ -255,3 +327,18 @@ components:
                 location: "token"
                 reason: "forbidden"
                 message: "You do not have permission to access this resource using the credentials that you supplied."
+    NotFound:
+      description: resource not found
+    UnprocessedEntity:
+      description: unprocessable entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorState'
+          example:
+            errors:
+              - domain: "JSON"
+                type: "decode"
+                location: "HTTP request body"
+                reason: "EOF"
+                message: "Unable to parse JSON."
