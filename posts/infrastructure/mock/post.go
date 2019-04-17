@@ -68,6 +68,15 @@ func (*postRepository) GetPost(slug string) (*post.Post, error) {
 	return nil, errNotFound
 }
 
+func (*postRepository) GetPostId(slug string) (string, error) {
+	for _, p := range mock.DB.Posts {
+		if p.Slug == slug {
+			return p.ID, nil
+		}
+	}
+	return "", errNotFound
+}
+
 func (*postRepository) ListComments(postID, authorID string) ([]*post.Comment, error) {
 	var comments []*post.Comment
 	for _, c := range mock.DB.Comments {
