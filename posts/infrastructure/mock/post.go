@@ -4,9 +4,11 @@ import (
 	"errors"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/akornatskyy/sample-blog-api-go/posts/domain/post"
 	"github.com/akornatskyy/sample-blog-api-go/shared/mock"
+	"github.com/google/uuid"
 )
 
 var (
@@ -112,6 +114,24 @@ func (*postRepository) CountCommentsAwaitingModeration(authorID string, limit in
 		}
 	}
 	return n, nil
+}
+
+func (*postRepository) AddPostComment(postID, authorID, message string) error {
+	id, err := uuid.NewRandom()
+	if err != nil {
+		return err
+	}
+	mock.DB.Comments = append([]*mock.Comment{
+		&mock.Comment{
+			ID:        id.String(),
+			AuthorID:  authorID,
+			Created:   time.Now().UTC(),
+			Message:   message,
+			Moderated: false,
+			PostID:    postID,
+		},
+	}, mock.DB.Comments...)
+	return nil
 }
 
 func filter(q string, limit, offset int) []*mock.Post {
