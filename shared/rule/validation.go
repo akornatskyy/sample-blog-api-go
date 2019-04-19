@@ -14,5 +14,10 @@ var (
 	Page  = validator.Number("page").Min(0).Max(9).Build()
 
 	Slug   = validator.String("slug").Required().Min(2).Max(35).Build()
-	Fields = validator.String("fields").Max(20).Build()
+	Fields = validator.String("fields").Max(20).Pattern(
+		"^(comments|permissions)(,(comments|permissions))?$",
+		"Required to match valid options.",
+	).Build()
+
+	Message = validator.String("message").Required().Min(2).Max(250).Build()
 )

@@ -7,7 +7,7 @@ import (
 	"github.com/akornatskyy/sample-blog-api-go/posts/domain"
 )
 
-const maxCommentsAwaitingModeration = 5
+const MaxCommentsAwaitingModeration = 5
 
 func Process(req *Request) (*Response, error) {
 	if err := req.Validate(); err != nil {
@@ -30,9 +30,9 @@ func Process(req *Request) (*Response, error) {
 			go func() {
 				defer wg.Done()
 				n, err := domain.PostRepository().CountCommentsAwaitingModeration(
-					req.Principal.ID, maxCommentsAwaitingModeration)
+					req.Principal.ID, MaxCommentsAwaitingModeration)
 				if err == nil {
-					resp.Permissions.CreateComment = n < maxCommentsAwaitingModeration
+					resp.Permissions.CreateComment = n < MaxCommentsAwaitingModeration
 				}
 			}()
 		}
