@@ -7,5 +7,5 @@ import (
 func Routes(c *config.Config) {
 	c.Router.HandlerFunc("GET", "/posts", ListPostsHandler())
 	c.Router.Handle("GET", "/posts/:slug", GetPostHandler(c.Token))
-	c.Router.Handle("POST", "/posts/:slug/comments", AddPostCommentHandler())
+	c.Router.Handle("POST", "/posts/:slug/comments", AddPostCommentHandler(c.Token))
 }

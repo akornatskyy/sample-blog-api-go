@@ -6,6 +6,7 @@ import (
 	"github.com/akornatskyy/goext/binding"
 	"github.com/akornatskyy/goext/httpjson"
 	"github.com/akornatskyy/goext/httptoken"
+	"github.com/akornatskyy/sample-blog-api-go/posts/usecase/addcomment"
 	"github.com/akornatskyy/sample-blog-api-go/posts/usecase/getpost"
 	"github.com/akornatskyy/sample-blog-api-go/posts/usecase/search"
 	"github.com/julienschmidt/httprouter"
@@ -54,7 +55,31 @@ func GetPostHandler(t httptoken.Token) httprouter.Handle {
 	}
 }
 
-func AddPostCommentHandler() httprouter.Handle {
+func AddPostCommentHandler(t httptoken.Token) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+		var req addcomment.Request
+		if err := httpjson.Decode(r, &req, 384); err != nil {
+			httpjson.Encode(w, err, http.StatusUnprocessableEntity)
+			return
+		}
+		req.Slug = p.ByName("slug")
+		if err := t.Authorize(w, r, &req.Principal); err != nil {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+
+		if err := addcomment.Process(&req); err != nil {
+			switch err {
+			case addcomment.ErrForbidden:
+				httpjson.Encode(w, err, http.StatusForbidden)
+			case addcomment.ErrNotFound:
+				httpjson.Encode(w, err, http.StatusNotFound)
+			default:
+				httpjson.Encode(w, err, http.StatusBadRequest)
+			}
+			return
+		}
+
+		w.WriteHeader(http.StatusCreated)
 	}
 }
