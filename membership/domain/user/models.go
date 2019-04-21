@@ -18,6 +18,7 @@ type (
 	}
 
 	Registration struct {
+		UserID       string
 		Email        string
 		Username     string
 		PasswordHash []byte

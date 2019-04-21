@@ -5,7 +5,6 @@ import (
 
 	"github.com/akornatskyy/sample-blog-api-go/membership/domain/user"
 	"github.com/akornatskyy/sample-blog-api-go/shared/mock"
-	"github.com/google/uuid"
 )
 
 var (
@@ -56,12 +55,8 @@ func (*userRepository) HasAccount(username string) (bool, error) {
 }
 
 func (*userRepository) CreateAccount(reg *user.Registration) (bool, error) {
-	id, err := uuid.NewRandom()
-	if err != nil {
-		return false, err
-	}
 	u := &mock.User{
-		ID:           id.String(),
+		ID:           reg.UserID,
 		Username:     reg.Username,
 		PasswordHash: string(reg.PasswordHash),
 		IsLocked:     false,

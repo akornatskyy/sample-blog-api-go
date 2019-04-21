@@ -5,6 +5,7 @@ import (
 
 	"github.com/akornatskyy/sample-blog-api-go/membership/domain"
 	"github.com/akornatskyy/sample-blog-api-go/membership/domain/user"
+	"github.com/google/uuid"
 )
 
 func Process(req *Request) (*Response, error) {
@@ -20,7 +21,12 @@ func Process(req *Request) (*Response, error) {
 	if err != nil {
 		return nil, err
 	}
+	id, err := uuid.NewRandom()
+	if err != nil {
+		return nil, err
+	}
 	reg := req.ToRegistration()
+	reg.UserID = id.String()
 	reg.Username = username
 	reg.PasswordHash = hash
 	if ok, err := r.CreateAccount(reg); err != nil || !ok {
