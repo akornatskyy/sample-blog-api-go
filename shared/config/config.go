@@ -19,6 +19,7 @@ import (
 
 const (
 	StrategyMock = "mock"
+	StrategySQL  = "sql"
 )
 
 var (
@@ -66,7 +67,10 @@ func New() *Config {
 	strategy := flag.String("strategy", StrategyMock, "a repository strategy")
 	flag.Parse()
 	log.Printf("using %s repository strategy", *strategy)
-	if *strategy == StrategyMock {
+	switch *strategy {
+	case StrategySQL:
+		fallthrough
+	case StrategyMock:
 		mock.Load("samples.json")
 	}
 

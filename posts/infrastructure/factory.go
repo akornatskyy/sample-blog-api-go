@@ -17,6 +17,8 @@ type (
 
 func NewFactory(c *config.Config) domain.Factory {
 	switch c.Strategy {
+	case config.StrategySQL:
+		fallthrough
 	case config.StrategyMock:
 		return &factory{
 			post: mock.NewPostRepository(),
