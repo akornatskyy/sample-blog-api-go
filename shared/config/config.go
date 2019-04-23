@@ -3,6 +3,7 @@ package config
 import (
 	"crypto/rand"
 	"crypto/sha1"
+	"database/sql"
 	"flag"
 	"log"
 	"net/http"
@@ -15,6 +16,8 @@ import (
 	"github.com/akornatskyy/goext/security/ticket"
 	"github.com/akornatskyy/sample-blog-api-go/shared/mock"
 	"github.com/julienschmidt/httprouter"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 const (
@@ -41,6 +44,7 @@ var (
 )
 
 type Config struct {
+	DB       *sql.DB
 	Router   *httprouter.Router
 	Strategy string
 	Token    httptoken.Token
@@ -67,14 +71,21 @@ func New() *Config {
 	strategy := flag.String("strategy", StrategyMock, "a repository strategy")
 	flag.Parse()
 	log.Printf("using %s repository strategy", *strategy)
+
+	var db *sql.DB
+	var err error
 	switch *strategy {
 	case StrategySQL:
-		fallthrough
+		db, err = sql.Open("mysql", "root@/sample_blog")
+		if err != nil {
+			log.Fatalf("ERR: %s", err)
+		}
 	case StrategyMock:
 		mock.Load("samples.json")
 	}
 
 	return &Config{
+		DB:       db,
 		Router:   r,
 		Strategy: *strategy,
 		Token: &httptoken.CookieToken{
