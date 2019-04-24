@@ -6,6 +6,7 @@ import (
 	"github.com/akornatskyy/sample-blog-api-go/membership/domain"
 	"github.com/akornatskyy/sample-blog-api-go/membership/domain/user"
 	"github.com/akornatskyy/sample-blog-api-go/membership/infrastructure/mock"
+	"github.com/akornatskyy/sample-blog-api-go/membership/infrastructure/sql"
 	"github.com/akornatskyy/sample-blog-api-go/shared/config"
 )
 
@@ -18,7 +19,9 @@ type (
 func NewFactory(c *config.Config) domain.Factory {
 	switch c.Strategy {
 	case config.StrategySQL:
-		fallthrough
+		return &factory{
+			user: sql.NewUserRepository(c.DB),
+		}
 	case config.StrategyMock:
 		return &factory{
 			user: mock.NewUserRepository(),
