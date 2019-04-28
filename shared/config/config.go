@@ -76,7 +76,12 @@ func New() *Config {
 	var err error
 	switch *strategy {
 	case StrategySQL:
-		db, err = sql.Open("mysql", "root@/sample_blog")
+		s := os.Getenv("DB")
+		if len(s) == 0 {
+			s = "root@/sample_blog"
+			log.Printf("WARN: using default DB: %s", s)
+		}
+		db, err = sql.Open("mysql", s)
 		if err != nil {
 			log.Fatalf("ERR: %s", err)
 		}
