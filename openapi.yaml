@@ -119,6 +119,26 @@ paths:
                 $ref: '#/components/schemas/SearchPostResponse'
         '400':
           $ref: '#/components/responses/ValidationErrors'
+  /posts/{slug}:
+    get:
+      summary: Get a post
+      operationId: getPost
+      tags:
+        - posts
+      parameters:
+        - $ref: "#/components/parameters/slug"
+        - $ref: "#/components/parameters/fields"
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostResponse'
+        '400':
+          $ref: '#/components/responses/ValidationErrors'
+        '404':
+          $ref: '#/components/responses/NotFound'
   /quote/daily:
     get:
       summary: Returns daily quote
@@ -155,6 +175,26 @@ components:
         default: 0
         minimum: 0
         maximum: 9
+    slug:
+      name: slug
+      in: path
+      description: post slug
+      required: true
+      schema:
+        type: string
+        minimum: 2
+        maximum: 35
+        example: inventore-hic-voluptatem
+    fields:
+      name: fields
+      in: query
+      description: fields to include
+      required: false
+      schema:
+        type: string
+        maximum: 20
+        pattern: '^(comments|permissions)(,(comments|permissions))?$'
+        example: comments,permissions
   schemas:
     ErrorState:
       properties:
@@ -283,6 +323,12 @@ components:
           format: date-time
         author:
           $ref: "#/components/schemas/Author"
+      required:
+        - slug
+        - title
+        - message
+        - created_on
+        - author
     SearchPostResponse:
       properties:
         paging:
@@ -294,6 +340,33 @@ components:
       required:
         - paging
         - items
+    Comment:
+      properties:
+        author:
+          $ref: "#/components/schemas/Author"
+        created_on:
+          type: string
+          format: date-time
+        moderated:
+          type: boolean
+        message:
+          type: string
+          example: corporis aut in aliquam qui quas cumque veniam earum est
+    Permissions:
+      properties:
+        create_comment:
+          type: boolean
+    PostResponse:
+      allOf:
+        - $ref: "#/components/schemas/Post"
+        - type: object
+          properties:
+            permissions:
+              $ref: "#/components/schemas/Permissions"
+            comments:
+              type: array
+              items:
+                $ref: "#/components/schemas/Comment"
     Quote:
       properties:
         author:
