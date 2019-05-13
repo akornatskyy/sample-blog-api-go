@@ -38,19 +38,10 @@ paths:
       tags:
         - membership
       requestBody:
-        description: user credentials
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SignInRequest'
+        $ref: '#/components/requestBodies/SignInRequest'
       responses:
         '200':
-          description: ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SignInResponse'
+          $ref: '#/components/responses/SignInResponse'
         '400':
           $ref: '#/components/responses/ValidationErrors'
         '422':
@@ -62,12 +53,7 @@ paths:
       tags:
         - membership
       requestBody:
-        description: user registration information
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SignUpRequest'
+        $ref: '#/components/requestBodies/SignUpRequest'
       responses:
         '204':
           $ref: '#/components/responses/NoContent'
@@ -92,11 +78,7 @@ paths:
         - membership
       responses:
         '200':
-          description: ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserResponse'
+          $ref: '#/components/responses/UserResponse'
         '403':
           $ref: '#/components/responses/Forbidden'
         '404':
@@ -112,11 +94,7 @@ paths:
         - $ref: "#/components/parameters/page"
       responses:
         '200':
-          description: ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SearchPostResponse'
+          $ref: '#/components/responses/SearchPostResponse'
         '400':
           $ref: '#/components/responses/ValidationErrors'
   /posts/{slug}:
@@ -130,11 +108,7 @@ paths:
         - $ref: "#/components/parameters/fields"
       responses:
         '200':
-          description: ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PostResponse'
+          $ref: '#/components/responses/PostResponse'
         '400':
           $ref: '#/components/responses/ValidationErrors'
         '404':
@@ -147,54 +121,10 @@ paths:
         - public
       responses:
         '200':
-          description: registered
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Quote'
+          $ref: '#/components/responses/DailyQuoteResponse'
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  parameters:
-    q:
-      name: q
-      in: query
-      description: text to search
-      required: false
-      schema:
-        type: string
-        maxLength: 20
-    page:
-      name: page
-      in: query
-      description: page number
-      required: false
-      schema:
-        type: number
-        format: int32
-        default: 0
-        minimum: 0
-        maximum: 9
-    slug:
-      name: slug
-      in: path
-      description: post slug
-      required: true
-      schema:
-        type: string
-        minimum: 2
-        maximum: 35
-        example: inventore-hic-voluptatem
-    fields:
-      name: fields
-      in: query
-      description: fields to include
-      required: false
-      schema:
-        type: string
-        maximum: 20
-        pattern: '^(comments|permissions)(,(comments|permissions))?$'
-        example: comments,permissions
   schemas:
     ErrorState:
       properties:
@@ -227,67 +157,6 @@ components:
         - location
         - reason
         - message
-    SignInRequest:
-      properties:
-        username:
-          type: string
-          minLength: 2
-          maxLength: 20
-          example: demo
-        password:
-          type: string
-          format: password
-          minLength: 8
-          maxLength: 12
-          example: password
-      required:
-        - username
-        - password
-    SignInResponse:
-      properties:
-        username:
-          type: string
-          example: demo
-      required:
-        - username
-    SignUpRequest:
-      properties:
-        email:
-          type: string
-          format: email
-          minLength: 6
-          maxLength: 50
-        username:
-          type: string
-          minLength: 2
-          maxLength: 20
-          example: demo
-        password:
-          type: string
-          format: password
-          minLength: 8
-          maxLength: 12
-        confirmPassword:
-          type: string
-          format: password
-      required:
-        - email
-        - username
-        - password
-        - confirmPassword
-    UserResponse:
-      properties:
-        username:
-          type: string
-          example: demo
-        firstName:
-          type: string
-          example: Max
-        lastName:
-          type: string
-          example: Johnson
-      required:
-        - username
     Paging:
       properties:
         before:
@@ -329,17 +198,6 @@ components:
         - message
         - created_on
         - author
-    SearchPostResponse:
-      properties:
-        paging:
-          $ref: "#/components/schemas/Paging"
-        items:
-          type: array
-          items:
-            $ref: "#/components/schemas/Post"
-      required:
-        - paging
-        - items
     Comment:
       properties:
         author:
@@ -356,17 +214,6 @@ components:
       properties:
         create_comment:
           type: boolean
-    PostResponse:
-      allOf:
-        - $ref: "#/components/schemas/Post"
-        - type: object
-          properties:
-            permissions:
-              $ref: "#/components/schemas/Permissions"
-            comments:
-              type: array
-              items:
-                $ref: "#/components/schemas/Comment"
     Quote:
       properties:
         author:
@@ -378,6 +225,98 @@ components:
       required:
         - author
         - message
+  parameters:
+    q:
+      name: q
+      in: query
+      description: text to search
+      required: false
+      schema:
+        type: string
+        maxLength: 20
+    page:
+      name: page
+      in: query
+      description: page number
+      required: false
+      schema:
+        type: number
+        format: int32
+        default: 0
+        minimum: 0
+        maximum: 9
+    slug:
+      name: slug
+      in: path
+      description: post slug
+      required: true
+      schema:
+        type: string
+        minimum: 2
+        maximum: 35
+        example: inventore-hic-voluptatem
+    fields:
+      name: fields
+      in: query
+      description: fields to include
+      required: false
+      schema:
+        type: string
+        maximum: 20
+        pattern: '^(comments|permissions)(,(comments|permissions))?$'
+        example: comments,permissions
+  requestBodies:
+    SignInRequest:
+      description: user credentials
+      required: true
+      content:
+        application/json:
+          schema:
+            properties:
+              username:
+                type: string
+                minLength: 2
+                maxLength: 20
+                example: demo
+              password:
+                type: string
+                format: password
+                minLength: 8
+                maxLength: 12
+                example: password
+            required:
+              - username
+              - password
+    SignUpRequest:
+      description: user registration information
+      required: true
+      content:
+        application/json:
+          schema:
+            properties:
+              email:
+                type: string
+                format: email
+                minLength: 6
+                maxLength: 50
+              username:
+                type: string
+                minLength: 2
+                maxLength: 20
+                example: demo
+              password:
+                type: string
+                format: password
+                minLength: 8
+                maxLength: 12
+              confirmPassword:
+                type: string
+                format: password
+            required:
+              - email
+              - username
+              - password
+              - confirmPassword
   responses:
     NoContent:
       description: no content
@@ -415,3 +354,67 @@ components:
                 location: "HTTP request body"
                 reason: "EOF"
                 message: "Unable to parse JSON."
+    SignInResponse:
+      description: ok
+      content:
+        application/json:
+          schema:
+            properties:
+              username:
+                type: string
+                example: demo
+            required:
+              - username
+    UserResponse:
+      description: ok
+      content:
+        application/json:
+          schema:
+            properties:
+              username:
+                type: string
+                example: demo
+              firstName:
+                type: string
+                example: Max
+              lastName:
+                type: string
+                example: Johnson
+            required:
+              - username
+    SearchPostResponse:
+      description: ok
+      content:
+        application/json:
+          schema:
+            properties:
+              paging:
+                $ref: "#/components/schemas/Paging"
+              items:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Post"
+            required:
+              - paging
+              - items
+    PostResponse:
+      description: ok
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/Post"
+              - type: object
+                properties:
+                  permissions:
+                    $ref: "#/components/schemas/Permissions"
+                  comments:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Comment"
+    DailyQuoteResponse:
+      description: daily quote
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Quote"
