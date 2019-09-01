@@ -3,8 +3,8 @@ package sql
 import (
 	"database/sql"
 
+	"github.com/akornatskyy/goext/sqlx"
 	"github.com/akornatskyy/sample-blog-api-go/membership/domain/user"
-	"github.com/akornatskyy/sample-blog-api-go/shared/sqlx"
 )
 
 type userRepository struct {
