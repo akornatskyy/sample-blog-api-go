@@ -15,7 +15,7 @@ func (req *Request) Validate() error {
 
 	if rule.Password.Validate(e, req.Password) &&
 		req.Password != req.ConfirmPassword {
-		_ = e.Add(&errorstate.Detail{
+		e.Add(&errorstate.Detail{
 			Type:     "field",
 			Location: "password",
 			Reason:   "no match",
