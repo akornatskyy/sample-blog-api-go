@@ -1,5 +1,7 @@
 github.com/akornatskyy/goext v1.3.0 h1:Z5Yrnb0H6B+KYuIzMB1QTxlCKTruJmx6b80H7c/qkfw=
 github.com/akornatskyy/goext v1.3.0/go.mod h1:XCSn9fvXTghn4jJdg/BkYlQABAgel2NivTYDCoV9gp0=
+github.com/akornatskyy/goext v1.4.0 h1:TS/dM+VWN7VkAVhPyQvM0MLf4DX7iBXF5AcB6T4U+0g=
+github.com/akornatskyy/goext v1.4.0/go.mod h1:XCSn9fvXTghn4jJdg/BkYlQABAgel2NivTYDCoV9gp0=
 github.com/go-sql-driver/mysql v1.4.1 h1:g24URVg0OFbNUTx9qqY1IRZ9D9z3iPyi5zKhQZpNwpA=
 github.com/go-sql-driver/mysql v1.4.1/go.mod h1:zAC/RDZ24gD3HViQzih4MyKcchzm+sOG5ZlKdlhCg5w=
 github.com/google/uuid v1.1.1 h1:Gkbcsh/GbpXz7lPftLA3P6TYMwjCLYm83jiFQZF/3gY=
