@@ -1,0 +1,21 @@
+version: 2
+updates:
+- package-ecosystem: gomod
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "03:00"
+  open-pull-requests-limit: 15
+  ignore:
+  - dependency-name: github.com/akornatskyy/goext
+    versions:
+    - 1.4.3
+  - dependency-name: github.com/google/uuid
+    versions:
+    - 1.2.0
+- package-ecosystem: docker
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "03:00"
+  open-pull-requests-limit: 15
