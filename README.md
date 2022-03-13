@@ -1,23 +1,23 @@
 # Sample Blog API
 
-[![Build Status](https://travis-ci.org/akornatskyy/sample-blog-api-go.svg?branch=master)](https://travis-ci.org/akornatskyy/sample-blog-api-go) [![Go Report Card](https://goreportcard.com/badge/github.com/akornatskyy/sample-blog-api-go)](https://goreportcard.com/report/github.com/akornatskyy/sample-blog-api-go) [![Go Doc](https://godoc.org/github.com/akornatskyy/sample-blog-api-go?status.svg)](https://godoc.org/github.com/akornatskyy/sample-blog-api-go)
+[![tests](https://github.com/akornatskyy/sample-blog-api-go/actions/workflows/tests.yaml/badge.svg)](https://github.com/akornatskyy/sample-blog-api-go/actions/workflows/tests.yaml) [![Go Report Card](https://goreportcard.com/badge/github.com/akornatskyy/sample-blog-api-go)](https://goreportcard.com/report/github.com/akornatskyy/sample-blog-api-go) [![Go Doc](https://godoc.org/github.com/akornatskyy/sample-blog-api-go?status.svg)](https://godoc.org/github.com/akornatskyy/sample-blog-api-go)
 
 A simple blog API written using go.
 
-# Install
+## Install
 
 ```sh
 go get github.com/akornatskyy/sample-blog-api-go
 ```
 
-# Run
+## Run
 
 ```sh
 cd $(go env GOPATH)/src/github.com/akornatskyy/sample-blog-api-go
 go run main.go
 ```
 
-# Docker
+## Docker
 
 ```sh
 docker run -it --rm -p 8080:8080 akorn/sample-blog-api-go
